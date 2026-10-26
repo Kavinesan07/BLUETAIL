@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap");
+
+:root {
+  --ink: #0f2a3d;
+  --tail: #2f7fd1;
+  --tail-dark: #2468ae;
+  --mist: #eef3f7;
+  --line: #cfdbe5;
+  --text: #17222c;
+  --muted: #52646f;
+  --error-bg: #fdecea;
+  --error-text: #9b1c14;
+  --ok-bg: #e6f4ea;
+  --ok-text: #1e6b34;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Manrope", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--mist);
+}
+
+a { color: var(--tail-dark); font-weight: 700; }
+button { font: inherit; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+input:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 3px solid var(--tail);
+  outline-offset: 2px;
+}
+
+/* ---------- Auth pages ---------- */
+.auth { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+
+.brand {
+  background: var(--ink);
+  color: #fff;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.brand h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 0.75rem; }
+.brand p { font-size: 1.15rem; max-width: 28ch; line-height: 1.5; margin: 0; color: #b9cfe2; }
+
+.panel { display: flex; justify-content: center; align-items: center; padding: 2rem; }
+
+.form { width: 100%; max-width: 24rem; display: flex; flex-direction: column; }
+.form h2 { font-size: 1.75rem; margin: 0 0 0.25rem; }
+.hint { margin: 0 0 1.5rem; color: var(--muted); }
+
+.field { display: flex; flex-direction: column; margin-top: 0.9rem; }
+.field label { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.35rem; }
+.field input {
+  font: inherit;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+.field input[aria-invalid="true"] { border-color: var(--error-text); }
+.field-error { color: var(--error-text); font-size: 0.85rem; margin-top: 0.3rem; }
+
+.primary {
+  margin-top: 1.5rem;
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--tail);
+  color: #fff;
+}
+.primary:hover:not(:disabled) { background: var(--tail-dark); }
+
+.switch { margin-top: 1.25rem; color: var(--muted); }
+
+.error, .success { padding: 0.7rem 0.9rem; border-radius: 6px; font-size: 0.95rem; margin-bottom: 0.5rem; }
+.error { background: var(--error-bg); color: var(--error-text); }
+.success { background: var(--ok-bg); color: var(--ok-text); }
+
+/* ---------- App shell ---------- */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  background: var(--ink);
+  color: #fff;
+}
+.logo { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; }
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.who { color: #b9cfe2; }
+.ghost {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid #4d6b82;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+}
+.ghost:hover { background: #1a3d57; }
+
+.content { max-width: 56rem; margin: 0 auto; padding: 2.5rem 1.5rem; }
+.content h1 { margin: 0 0 0.25rem; }
+.empty {
+  margin-top: 1.5rem;
+  padding: 2.5rem 1.5rem;
+  border: 1.5px dashed var(--line);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--muted);
+}
+.empty h2 { color: var(--text); margin: 0 0 0.35rem; }
+
+@media (max-width: 760px) {
+  .auth { grid-template-columns: 1fr; }
+  .brand { padding: 2rem 1.5rem; min-height: 11rem; }
+  .brand h1 { font-size: 2.5rem; }
+  .topbar { padding: 0.9rem 1rem; }
+}

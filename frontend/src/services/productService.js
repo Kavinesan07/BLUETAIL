@@ -8,11 +8,11 @@ export const productService = {
 };
 
 export const CATEGORIES = [
-  "Remote Control",
-  "Die-cast",
-  "Ride-on",
-  "Building Sets",
-  "Pull-back",
+  "cars",
+  "playstation",
+  "books and comics",
+  "jeserys",
+  "anime",
 ];
 
 export const formatPrice = (n) =>

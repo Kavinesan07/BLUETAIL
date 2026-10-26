@@ -6,7 +6,7 @@ export default function Dashboard() {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <span className="logo">Bluetail</span>
+        <h1 className="logo">Bluetail</h1>
         <div className="topbar-right">
           <span className="who">{user.username}</span>
           <button className="ghost" onClick={logout}>Log out</button>

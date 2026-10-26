@@ -1,16 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap");
 
 :root {
-  --ink: #0f2a3d;
-  --tail: #2f7fd1;
-  --tail-dark: #2468ae;
-  --mist: #eef3f7;
+  --ink: #02949c;
+  --tail: #1f263d;
+  --tail-dark: #6e3561;
+  --mist: #dbe8d7;
   --line: #cfdbe5;
   --text: #17222c;
-  --muted: #52646f;
+  --muted: #17222c;
   --error-bg: #fdecea;
   --error-text: #9b1c14;
-  --ok-bg: #e6f4ea;
+  --ok-bg:#db9951;
   --ok-text: #1e6b34;
 }
 

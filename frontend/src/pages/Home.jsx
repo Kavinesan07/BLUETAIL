@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
 import { CATEGORIES, productService } from "../services/productService";
+import Login from "./Login";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -9,7 +10,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
-
+  
   useEffect(() => {
     productService
       .list()

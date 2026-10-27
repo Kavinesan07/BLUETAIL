@@ -1,11 +1,11 @@
 from sqlalchemy import text
 
-from app import app  # the FastAPI instance from app/__init__.py
-from app import models  # registers tables before create_all
+from app import app  
+from app import models 
 from app.database import Base, engine 
 import uvicorn
 
-# Database connectivity check (runs once when the server starts)
+
 try:
     with engine.connect() as connection:
         connection.execute(text("SELECT 1"))

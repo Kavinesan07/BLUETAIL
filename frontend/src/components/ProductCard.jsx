@@ -1,11 +1,29 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { imageUrl } from "../services/api";
-import { formatPrice } from "../services/productService";
+import { formatPrice, productService } from "../services/productService";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
-export default function ProductCard({ product }) {
-  const { addItem } = useCart();
+export default function ProductCard({ product, onDeleted }) {
+  const { addItem, removeItem } = useCart();
+  const { isAuthenticated } = useAuth();
+  const [deleting, setDeleting] = useState(false);
   const outOfStock = product.stock <= 0;
+
+  async function handleDelete() {
+    if (!window.confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
+
+    setDeleting(true);
+    try {
+      await productService.remove(product.id);
+      removeItem(product.id);          // also remove it from the cart
+      onDeleted?.(product.id);         // tell the page to remove the card
+    } catch (err) {
+      alert(err.message);
+      setDeleting(false);
+    }
+  }
 
   return (
     <article className="card">
@@ -29,6 +47,12 @@ export default function ProductCard({ product }) {
         >
           {outOfStock ? "Out of stock" : "Add to cart"}
         </button>
+
+        {isAuthenticated && (
+          <button className="danger" onClick={handleDelete} disabled={deleting}>
+            {deleting ? "Deleting..." : "Delete"}
+          </button>
+        )}
       </div>
     </article>
   );

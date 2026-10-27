@@ -10,7 +10,7 @@ from ..models import Users
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-# ---------- Schemas ----------
+
 
 class UserCreate(BaseModel):
     username: str = Field(min_length=2, max_length=100)
@@ -29,8 +29,6 @@ class UserLogin(BaseModel):
     password: str
 
 
-# ---------- Helper ----------
-
 def user_to_dict(user):
     return {
         "id": user.id,
@@ -45,7 +43,6 @@ def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
-# ---------- POST: create ----------
 
 @router.post("/create", status_code=201)
 def create_user(data: UserCreate, db: Session = Depends(get_db)):
@@ -68,7 +65,6 @@ def create_user(data: UserCreate, db: Session = Depends(get_db)):
     return {"message": "User created successfully!", "user": user_to_dict(user)}
 
 
-# ---------- POST: login ----------
 
 @router.post("/login")
 def login_user(data: UserLogin, db: Session = Depends(get_db)):
@@ -80,68 +76,4 @@ def login_user(data: UserLogin, db: Session = Depends(get_db)):
     return {"message": "Sign-in successful!", "user": user_to_dict(user)}
 
 
-# ---------- GET: all users ----------
 
-@router.get("/")
-def get_users(db: Session = Depends(get_db)):
-    return [user_to_dict(u) for u in db.query(Users).all()]
-
-
-# ---------- GET: one user ----------
-
-@router.get("/{user_id}")
-def get_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(Users).filter(Users.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user_to_dict(user)
-
-
-# ---------- PUT: update ----------
-
-@router.put("/{user_id}")
-def update_user(user_id: int, data: UserUpdate, db: Session = Depends(get_db)):
-    user = db.query(Users).filter(Users.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    changes = data.model_dump(exclude_unset=True)
-
-    if "email" in changes and changes["email"] != user.email:
-        taken = db.query(Users).filter(Users.email == changes["email"]).first()
-        if taken:
-            raise HTTPException(status_code=409, detail="Email already in use")
-        user.email = changes["email"]
-
-    if "username" in changes:
-        user.username = changes["username"]
-
-    if "password" in changes:
-        user.hashed_password = hash_password(changes["password"])
-
-    try:
-        db.commit()
-        db.refresh(user)
-    except Exception:
-        db.rollback()
-        raise HTTPException(status_code=500, detail="Could not update user")
-
-    return {"message": "User updated successfully!", "user": user_to_dict(user)}
-
-
-# ---------- DELETE ----------
-
-@router.delete("/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(Users).filter(Users.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    try:
-        db.delete(user)
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise HTTPException(status_code=500, detail="Could not delete user")
-
-    return {"message": "User deleted successfully!"}    

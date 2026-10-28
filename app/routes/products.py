@@ -26,17 +26,26 @@ class ProductOut(BaseModel):
     category: str
     image_url: str | None = None
 
-    # model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True)
 
 
 @router.get("", response_model=list[ProductOut])
 def list_products(db: Session = Depends(get_db)):
-    return db.query(Product).order_by(Product.id.desc()).all()
+    return (
+        db.query(Product)
+        .filter(Product.is_deleted == False)
+        .order_by(Product.id.desc())
+        .all()
+    )
 
 
 @router.get("/{product_id}", response_model=ProductOut)
 def get_product(product_id: int, db: Session = Depends(get_db)):
-    product = db.query(Product).filter(Product.id == product_id).first()
+    product = (
+        db.query(Product)
+        .filter(Product.id == product_id, Product.is_deleted == False)
+        .first()
+    )
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
@@ -73,17 +82,22 @@ async def create_product(
     db.commit()
     db.refresh(product)
     return product
-    
+
+
 @router.delete("/{product_id}", status_code=204)
 def delete_product(product_id: int, db: Session = Depends(get_db)):
-    product = db.query(Product).filter(Product.id == product_id).first()
+    product = (
+        db.query(Product)
+        .filter(Product.id == product_id, Product.is_deleted == False)
+        .first()
+    )
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    image_name = Path(product.image_url).name if product.image_url else None
+    product.is_deleted = True  # soft delete
 
-    db.delete(product)
-    db.commit()
-
-    if image_name:
-        (UPLOAD_DIR / image_name).unlink(missing_ok=True)
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Could not delete product")

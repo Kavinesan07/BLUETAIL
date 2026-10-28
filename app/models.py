@@ -1,6 +1,6 @@
 from datetime import datetime , timezone
 
-from sqlalchemy import Column, DateTime, Float, Integer, String, Text
+from sqlalchemy import Column, DateTime, Float, Integer, String, Text, Boolean
 from .database import Base
 
 
@@ -24,3 +24,4 @@ class Product(Base):
     stock = Column(Integer, nullable=False, default=0)
     category = Column(String(100), nullable=False)
     image_url = Column(String(300), nullable=True)
+    is_deleted = Column(Boolean, default=False, nullable=False)

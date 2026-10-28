@@ -79,9 +79,15 @@ export default function ProductDetail() {
                       setQty(Math.min(product.stock, Math.max(1, Number(e.target.value) || 1)))
                     }
                   />
-                  <button className="primary" onClick={() => addItem(product, qty)}>
-                    Add to cart
-                  </button>
+                 <button
+  className="primary"
+  onClick={() => {
+    addItem(product, qty);
+    navigate("/cart");
+  }}
+>
+  Add to cart
+</button>
                   <button
                     className="ghost dark"
                     onClick={() => {

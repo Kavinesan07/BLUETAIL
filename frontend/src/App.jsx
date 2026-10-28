@@ -8,8 +8,10 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import AddProduct from "./pages/AddProduct";
 
+
 export default function App() {
   return (
+
     <Routes>
       {/* Anyone can browse the shop, like Amazon */}
       <Route path="/" element={<Home />} />
@@ -29,5 +31,6 @@ export default function App() {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+
   );
 }

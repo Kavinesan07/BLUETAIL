@@ -75,3 +75,15 @@
   .topbar-right { flex-wrap: wrap; gap: 0.7rem; }
   .row-2 { grid-template-columns: 1fr; }
 }
+
+
+
+
+.danger {
+  background: #fff; color: var(--error-text); border: 1.5px solid var(--error-text);
+  border-radius: 6px; padding: 0.5rem 0.8rem; font-weight: 700; cursor: pointer;
+}
+.danger:hover:not(:disabled) { background: #fdecea; }
+.danger:disabled { opacity: 0.6; cursor: not-allowed; }
+.card-body .danger { margin-top: 0.4rem; }
+.wide-danger { margin-top: 1.5rem; align-self: flex-start; }

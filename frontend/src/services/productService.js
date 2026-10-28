@@ -5,6 +5,7 @@ export const productService = {
   get: (id) => api.get(`/products/${id}`),
   // formData contains: name, price, category, stock, description, image (file)
   create: (formData) => api.post("/products", formData),
+  remove: (id) => api.delete(`/products/${id}`),
 };
 
 export const CATEGORIES = [

@@ -7,7 +7,8 @@ import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import AddProduct from "./pages/AddProduct";
-
+import Address from "./pages/Address";
+import Payment from "./pages/payment";
 
 export default function App() {
   return (
@@ -17,6 +18,8 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/address" element={<Address />} />
+      <Route path="/payment" element={<Payment />} />
 
       <Route element={<GuestRoute />}>
         <Route path="/login" element={<Login />} />

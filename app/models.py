@@ -1,6 +1,6 @@
 from datetime import datetime , timezone
 
-from sqlalchemy import Column, DateTime, Float, Integer, String, Text, Boolean
+from sqlalchemy import Column, DateTime, Float, Integer, String, Text, Boolean,ForeignKey
 from .database import Base
 
 
@@ -25,3 +25,13 @@ class Product(Base):
     category = Column(String(100), nullable=False)
     image_url = Column(String(300), nullable=True)
     is_deleted = Column(Boolean, default=False, nullable=False)
+
+class Address(Base):
+    __tablename__="Address"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    street = Column(String(200), nullable=False)
+    city = Column(String(100), nullable=False)
+    state = Column(String(100), nullable=False)
+    pin_code = Column(String(6), nullable=False)
+    phone_number = Column(String(15), nullable=False)

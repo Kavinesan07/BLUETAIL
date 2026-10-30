@@ -94,7 +94,7 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    product.is_deleted = True  # soft delete
+    product.is_deleted = True 
 
     try:
         db.commit()

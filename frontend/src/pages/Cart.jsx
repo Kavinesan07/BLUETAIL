@@ -3,10 +3,11 @@ import Navbar from "../components/Navbar";
 import { useCart } from "../context/CartContext";
 import { imageUrl } from "../services/api";
 import { formatPrice } from "../services/productService";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const { items, setQty, removeItem, clear, total } = useCart();
-
+  const navigate = useNavigate();
   return (
     <div className="app-shell">
       <Navbar />
@@ -53,9 +54,9 @@ export default function Cart() {
               <p className="summary-row"><span>Total</span><strong>{formatPrice(total)}</strong></p>
               <button
                 className="primary"
-                onClick={() => alert("Checkout is not connected yet. Next step: orders API.")}
+                  onClick={() => navigate("/address")}
               >
-                Checkout
+               Checkout 
               </button>
               <button className="ghost dark" onClick={clear}>Clear cart</button>
             </aside>

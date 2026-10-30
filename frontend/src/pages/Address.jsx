@@ -61,21 +61,28 @@ export default function Address() {
 
     setLoading(true);
     try {
-      await addressService.create(payload);
+      const saved = await addressService.create(payload);
+      const addressId = saved?.id ?? saved?.address?.id; // the id the backend gave to this address
+      if (addressId == null) {
+        throw new Error("The server did not return the saved address ID. Restart the backend and try again.");
+      }
 
       // go to the Payment page and carry the address with us
-      navigate("/payment", {
-        state: {
-          address: {
-            name: form.name.trim(),
-            phone: form.phone_number,
-            street: form.street.trim(),
-            city: form.city.trim(),
-            state: form.state.trim(),
-            pin_code: form.pin_code,
-          },
-        },
-      });
+     navigate("/orders", {
+  state: {
+    checkout: true,
+    address: {
+      id: addressId,
+      name: form.name.trim(),
+      email: form.email.trim(),
+      phone_number: form.phone_number,
+      street: form.street.trim(),
+      city: form.city.trim(),
+      state: form.state.trim(),
+      pin_code: form.pin_code,
+    },
+  },
+});
     } catch (err) {
       setServerError(err.message);
     } finally {

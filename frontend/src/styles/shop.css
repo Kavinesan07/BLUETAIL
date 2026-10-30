@@ -111,3 +111,19 @@
 .danger:disabled { opacity: 0.6; cursor: not-allowed; }
 .card-body .danger { margin-top: 0.4rem; }
 .wide-danger { margin-top: 1.5rem; align-self: flex-start; }
+
+/* ---- My orders page ---- */
+.order-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+.order-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.25rem; }
+.order-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+.order-date { margin-left: 0.75rem; color: var(--muted); font-size: 0.9rem; }
+.order-items { list-style: none; margin: 0 0 0.75rem; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.order-items li { display: flex; justify-content: space-between; gap: 0.75rem; }
+.status-badge {
+  padding: 0.2rem 0.7rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+  text-transform: capitalize; background: #ECEFF1; color: #444441;
+}
+.status-pending { background: #fff4d6; color: #8a5a00; }
+.status-confirmed, .status-shipped { background: #e3effa; color: #1c5a99; }
+.status-delivered { background: #e6f4ea; color: #1e6b34; }
+.status-cancelled { background: #fdecea; color: #9b1c14; }

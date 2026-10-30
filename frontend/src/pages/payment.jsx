@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation ,useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import FormField from "../components/FormField";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
-import { formatPrice  } from "../services/productService";
-import { paymentService } from "../services/paymentserivce";
+import { formatPrice } from "../services/productService";
+import { orderService } from "../services/ordersservice";
+import { paymentService } from "../services/paymentservice";
+
 
 const METHODS = [
   { id: "cod", title: "Cash on Delivery", text: "Pay when the order arrives." },
@@ -19,7 +21,7 @@ function formatExpiry(value) {
 }
 
 function formatCardNumber(digits) {
-  return digits.replace(/(\d{4})(?=\d)/g, "$1 "); // 1234 5678 9012 3456
+  return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
 }
 
 function isExpired(expiry) {
@@ -33,7 +35,7 @@ export default function Payment() {
   const { user } = useAuth();
   const { items, total, clear } = useCart();
   const location = useLocation();
-  const address = location.state?.address; // sent from the Address page
+  const address = location.state?.address; // sent from the Address page (includes its id)
 
   const [method, setMethod] = useState("cod");
   const [form, setForm] = useState({
@@ -46,7 +48,10 @@ export default function Payment() {
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [paid, setPaid] = useState(null); // the saved payment, after success
+  const [order, setOrder] = useState(null); // the order, once it is created
+  const [paid, setPaid] = useState(null);   // the payment, after success
+
+ 
 
   function handleChange(e) {
     const { name } = e.target;
@@ -76,17 +81,34 @@ export default function Payment() {
   }
 
   async function handleSubmit(e) {
+    debugger;
     e.preventDefault();
     setServerError("");
     if (!address) return;
+    if (!address.id) {
+      setServerError("The saved address has no id. Check what POST /address/create returns.");
+      return;
+    }
     if (!validate()) return;
-
-    // Only the method and amount go to the backend. Card and UPI details stay in the browser.
-    const payload = { user_id: user.id, amount: total, method };
 
     setLoading(true);
     try {
-      const saved = await paymentService.create(payload);
+      // 1. Create the order once. If the payment fails and the user tries again,
+      //    we reuse the same order instead of creating a second one.
+      let current = order;
+      if (!current) {
+        current = await orderService.create({
+          user_id: user.id,
+          address_id: address.id,
+          items: items.map((i) => ({ product_id: i.id, quantity: i.qty })),
+        });
+        setOrder(current);
+      }
+
+      // 2. Pay for that order. The backend takes the amount from the order.
+      //    Card and UPI details never leave the browser.
+      const saved = await paymentService.create({ order_id: current.id, method });
+
       setPaid(saved);
       clear(); // empty the cart
     } catch (err) {
@@ -106,9 +128,10 @@ export default function Payment() {
             <h1>Order placed</h1>
             <p>Thank you, {user.username}.</p>
             <p className="success-line">
-              Payment #{paid.id} - {formatPrice(paid.amount)} - {paid.status}
+              Order #{paid.order_id} - {formatPrice(paid.amount)} -{" "}
+              {paid.status === "paid" ? "Paid" : "Pay on delivery"}
             </p>
-            <Link to="/" className="primary link-btn-block">Continue shopping</Link>
+            <Link to="/orders" className="primary link-btn-block">View my orders</Link>
           </div>
         </main>
       </div>
@@ -206,6 +229,7 @@ export default function Payment() {
 
             <button className="primary" type="submit" disabled={loading || !address}>
               {loading ? "Processing..." : method === "cod" ? "Place order" : `Pay ${formatPrice(total)}`}
+
             </button>
           </form>
 

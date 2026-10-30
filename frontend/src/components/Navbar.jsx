@@ -18,6 +18,7 @@ export default function Navbar() {
 
         {isAuthenticated ? (
           <>
+            <NavLink to="/orders" className="nav-link">My orders</NavLink>
             <NavLink to="/admin/add-product" className="nav-link">Add product</NavLink>
             <Link to="/account" className="who">{user.username}</Link>
             <button className="ghost" onClick={logout}>Log out</button>

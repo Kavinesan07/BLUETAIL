@@ -9,6 +9,7 @@ import Cart from "./pages/Cart";
 import AddProduct from "./pages/AddProduct";
 import Address from "./pages/Address";
 import Payment from "./pages/payment";
+import Orders from "./pages/orders";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
       <Route path="/cart" element={<Cart />} />
       <Route path="/address" element={<Address />} />
       <Route path="/payment" element={<Payment />} />
+      <Route path="/orders" element={<Orders />} />
 
       <Route element={<GuestRoute />}>
         <Route path="/login" element={<Login />} />

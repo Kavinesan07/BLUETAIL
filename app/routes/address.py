@@ -1,6 +1,6 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -17,7 +17,14 @@ class AddressCreate(BaseModel):
     pin_code: str = Field(min_length=6, max_length=6)
     phone_number: str = Field(min_length=10, max_length=15)
 
-@router.post("/create", response_model=AddressCreate, status_code=201)
+
+class AddressOut(AddressCreate):
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+@router.post("/create", response_model=AddressOut, status_code=201)
 def create_address(address: AddressCreate, db: Session = Depends(get_db)):
     user = db.query(Users).filter(Users.id == address.user_id).first()
     if not user:
